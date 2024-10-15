@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+List of music
+{% endblock title %}
+
+{% block content %}
+<h1>musics</h1>
+<div class="mb-10">
+{% for item in items %}
+    <div class="mb-5">
+        <div>
+            
+            <label><b>{{"title" | capitalize }}:</b> {{item.title}}</label>
+            </div>
+        <div>
+            
+            <label><b>{{"pdf" | capitalize }}:</b> {{item.pdf}}</label>
+            </div>
+        <div>
+            
+            <label><b>{{"cost" | capitalize }}:</b> {{item.cost}}</label>
+            </div>
+        <div>
+            
+            <label><b>{{"downloads" | capitalize }}:</b> {{item.downloads}}</label>
+            </div>
+        <div>
+            
+            <label><b>{{"description" | capitalize }}:</b> {{item.description}}</label>
+            </div>
+        <div>
+            
+            <label><b>{{"date" | capitalize }}:</b> {{item.date}}</label>
+            </div>
+        <a href="/music/{{ item.id }}/edit">Edit</a>
+        <a href="/music/{{ item.id }}">View</a>
+    </div>
+{% endfor %}
+<br />
+<br />
+<a href="/music/new">New music</a>
+</div>
+{% endblock content %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+View music: {{ item.id }}
+{% endblock title %}
+
+{% block content %}
+<h1>View music: {{ item.id }}</h1>
+<div class="mb-10">
+<div>
+        <label>title: {{item.title}}</label>
+    </div>
+<div>
+        <label>pdf: {{item.pdf}}</label>
+    </div>
+<div>
+        <label>cost: {{item.cost}}</label>
+    </div>
+<div>
+        <label>downloads: {{item.downloads}}</label>
+    </div>
+<div>
+        <label>description: {{item.description}}</label>
+    </div>
+<div>
+        <label>date: {{item.date}}</label>
+    </div>
+<br />
+<a href="/music">Back to music</a>
+</div>
+{% endblock content %}

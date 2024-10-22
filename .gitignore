@@ -17,3 +17,6 @@ target/
 *.pdb
 
 *.sqlite
+
+# Decide later whether to mirror files in git, pdfs fairly small.
+uploads/

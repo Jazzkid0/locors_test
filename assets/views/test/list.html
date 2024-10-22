@@ -40,5 +40,33 @@ List of test
 <br />
 <br />
 <a href="/tests/new">New test</a>
+
+<button id="test-btn" class=" text-xs py-3 px-6 rounded-lg bg-gray-900 text-white" onclick="testpost(event)">testpost</button>
+<button id="test-btn" class=" text-xs py-3 px-6 rounded-lg bg-gray-900 text-white" onclick="testget(event)">testget</button>
+
+<script>
+function testpost(event) {
+    event.preventDefault();
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/tests/pdf", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            window.location.href = "/tests";
+        }
+    };
+    xhr.send();
+}
+function testget(event) {
+    event.preventDefault();
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/tests/pdf", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            window.location.href = "/tests";
+        }
+    };
+    xhr.send();
+}
+</script>
 </div>
 {% endblock content %}

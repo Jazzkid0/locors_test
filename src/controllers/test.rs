@@ -1,11 +1,12 @@
 #![allow(clippy::missing_errors_doc)]
 #![allow(clippy::unnecessary_struct_initialization)]
 #![allow(clippy::unused_async)]
+use std::{convert::From, path::{self, PathBuf}};
+
 use loco_rs::prelude::*;
-use loco_rs::storage::{Storage, drivers::local};
 use bytes::Bytes;
 use serde::{Deserialize, Serialize};
-use axum::{extract::Form, response::Redirect};
+use axum::{extract::Form, response::Redirect, http::StatusCode};
 use sea_orm::{sea_query::Order, QueryOrder};
 use axum::debug_handler;
 
@@ -113,13 +114,41 @@ pub async fn remove(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Resul
 }
 
 #[debug_handler]
-pub async fn upload_file() -> Result<Response> {
-    let storage = Storage::single(local::new());
-    let path = std::path::Path::new("test.txt");
-    let content = "Test!";
-    let result = storage.upload(path, &Bytes::from(content)).await;
-    assert!(result.is_ok());
-    Ok(Response::default())
+pub async fn upload_file(
+    State(ctx): State<AppContext>,
+    content: Bytes
+) -> Result<StatusCode> {
+    let path = PathBuf::from("test.txt");
+    let testcontent = Bytes::from("boobs!");
+    let storage_response = ctx.storage.upload(path.as_path(), &testcontent).await;
+    print!("\nTried storing file... ");
+    match storage_response {
+        Ok(_) => {
+            println!("Success\n");
+            Ok(StatusCode::OK) // 200
+            },
+        Err(_) => {
+            println!("Error\n");
+            Err(loco_rs::Error::InternalServerError) // 500
+        }
+    }
+}
+
+pub async fn download_file_text(
+    State(ctx): State<AppContext>
+) -> Result<StatusCode> {
+    let storage_response: loco_rs::storage::StorageResult<String> = loco_rs::storage::Storage::download(&ctx.storage, PathBuf::from("test.txt").as_path()).await;
+    match storage_response  {
+        Ok(out) => {
+            println!("Success\n");
+            println!("\n\n{out}\n\n");
+            Ok(StatusCode::OK) // 200
+            },
+        Err(_) => {
+            println!("Error\n");
+            Err(loco_rs::Error::InternalServerError) // 500
+        }
+    }
 }
 
 pub fn routes() -> Routes {
@@ -132,4 +161,6 @@ pub fn routes() -> Routes {
         .add(":id/edit", get(edit))
         .add(":id", post(update))
         .add(":id", delete(remove))
+        .add("pdf", get(download_file_text))
+        .add("pdf", post(upload_file))
 }

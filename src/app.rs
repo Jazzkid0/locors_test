@@ -27,7 +27,7 @@ pub struct App;
 impl Hooks for App {
     async fn after_context(ctx: AppContext) -> Result<AppContext> {
         Ok(AppContext {
-            storage: Storage::single(local::new()).into(),
+            storage: Storage::single(local::new_with_prefix("uploads/")?).into(),
             ..ctx
         })
     }
